@@ -23,7 +23,6 @@ def dologin(request):
     return redirect("/profile")
 
 def loginfn(request):
-    
     if request.method=="POST":
         fm=AuthenticationForm(request,data=request.POST)
         if fm.is_valid():
@@ -105,7 +104,8 @@ def teacher_dashboard(request):
     if request.user.is_authenticated and request.user.user_type==2:
         courses = Course.objects.filter(teacher=request.user)
         context = {
-            'courses': courses
+            'courses': courses,
+            'user':request.user
         }
         return render(request,'learn/teacher.html',context)
     messages.error(request,"Teacher not login.. login first")
@@ -113,18 +113,19 @@ def teacher_dashboard(request):
 # Create Course View
 @login_required
 def add_course(request):
-    if request.method=="POST":
-     fm=CourseForm(request.POST)
-     if fm.is_valid():
+    if request.user.is_authenticated and (request.user.user_type==2 or request.user.user_type==1) :
+     if request.method=="POST":
+      fm=CourseForm(request.POST)
+      if fm.is_valid():
          course=fm.save(commit=False)
          course.teacher=request.user
          course.save()
          messages.success(request,"Course Added Sucessfully")
-         return redirect('/teacher_board')
-     else:
+         return redirect('/course')
+      else:
          fm=CourseForm()
          messages.error(request,"Course Not Added")
-         return redirect('/teacher_board')
+         return redirect('/course')
     fm=CourseForm()
     return render(request, 'learn/createcourse.html', {'form': fm})
 
@@ -134,7 +135,7 @@ def delete_course(request,courseid):
           course=Course.objects.get(id=courseid)
           course.delete()
           messages.success(request,"Course Deleted Sucessfully")
-          return redirect('/teacher_board')
+          return redirect('/course')
         except Course.DoesNotExist:
             return HttpResponse("Course not found.", status=404)
         
@@ -148,12 +149,28 @@ def update_course(request,courseid):
         fm=CourseForm(request.POST,instance=course)
         if fm.is_valid():
             fm.save()
-            return redirect('/teacher_board')
+            return redirect('/course')
     else :
         form=CourseForm(instance=course)
 
     return render(request, 'learn/createcourse.html', {'form': form, 'course': course})
 
+def atcourse_page(request):
+    if request.user.is_authenticated and (request.user.user_type==2 or request.user.user_type==1) :
+      courses = Course.objects.filter(teacher=request.user)
+      context = {
+            'courses': courses,
+            'user':request.user
+        }
+      return render(request, 'learn/course.html',context)
+    
+    return redirect('/teacher_board')
+ 
+
+
+
+
+# Student 
 def student_dashboard(request):
     if request.user.is_authenticated and request.user.user_type==3:
         all_courses = Course.objects.all()
@@ -211,6 +228,8 @@ def disenroll_course(request,course_id):
 
 
     return redirect('/student_board')
+
+
 
 def admin_board(request):
     if request.user.is_authenticated and request.user.user_type==1:

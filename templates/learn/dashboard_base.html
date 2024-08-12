@@ -83,27 +83,55 @@
     <!-- Sidebar -->
     <div id="sidebar">
         <h3>Teacher Dashboard</h3>
-        <a href="{% url 'teacher_dashboard' %}"><i class="fas fa-home"></i> Overview</a>
-        <a href="{% url 'atcourse_page' %}"><i class="fas fa-book"></i> Courses</a>
+        <a href="#"><i class="fas fa-home"></i> Overview</a>
+        <a href="#"><i class="fas fa-book"></i> Courses</a>
         <a href="#"><i class="fas fa-user-graduate"></i> Students</a>
-        <a href="{% url 'dologout' %}"><i class="fas fa-sign-out-alt"></i> Log Out</a>
+        <a href="#"><i class="fas fa-sign-out-alt"></i> Log Out</a>
     </div>
 
     <!-- Content -->
-    {% block content %}
     <div id="content">
         <div class="container mt-4">
-            <h1 class="mb-4">Welcome, {{user.username}}</h1>
+            <h1 class="mb-4">Welcome,</h1>
             
             <h2>Overview</h2>
             <p>Here you can manage your courses and students.</p>
             
-     
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2>Your Courses</h2>
+                <a href="{% url 'addcourse' %}" class="btn btn-primary">Add New Course</a>
+            </div>
+
             <!-- Course List -->
-       
-    
+            <div class="card mt-4">
+                <div class="card-body">
+                    {% if courses %}
+                        <ul class="list-group">
+                            {% for course in courses %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h5>{{ course.title }}</h5>
+                                        <p>{{ course.description }}</p>
+                                    </div>
+                                    <div>
+                                        <a  href="{% url 'update_course' course.id %}" class="icon-btn">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a  href="{% url 'delete_course' course.id %}" class="icon-btn">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No courses to display.</p>
+                    {% endif %}
+
+                    
+                </div>
+            </div>
         </div>
     </div>
-    {% endblock %}
 </body>
 </html>

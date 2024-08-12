@@ -19,7 +19,7 @@ from django.urls import path
 from learn import views as lv
 
 urlpatterns = [
-    path("", lv.base),
+    path("", lv.base,name='home'),
     path("admin/", admin.site.urls),
     path("login/",lv.dologin,name='dologin'),
     path("signup/",lv.signup,name='signup'),
@@ -27,7 +27,7 @@ urlpatterns = [
     path("loginfn/",lv.loginfn,name="loginfn"),
     path("profile/",lv.profile),
     path("logout/",lv.dologout,name="dologout"),
-    path("teacher_board/",lv.teacher_dashboard),
+    path("teacher_board/",lv.teacher_dashboard,name='teacher_dashboard'),
     path("add_course/",lv.add_course,name="addcourse"),
     path('delete/<int:courseid>/', lv.delete_course, name='delete_course'),
     path('update/<int:courseid>/', lv.update_course, name='update_course'),
@@ -35,6 +35,7 @@ urlpatterns = [
     path("enroll_course/<int:course_id>/",lv.enroll_course,name='enroll_course'),
     path('disenroll/<int:course_id>/', lv.disenroll_course, name='disenroll_course'),
     path("admin_board/",lv.admin_board),
+    path("course/",lv.atcourse_page,name='atcourse_page')
 ]
     
     
