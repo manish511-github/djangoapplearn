@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <style>
+        #sidebar {
+            width: 250px;
+            height: 100vh;
+            background-color: #343a40;
+            color: white;
+            padding: 15px;
+            position: fixed; 
+            top: 56px; 
+            left: 0;
+            overflow-y: auto; 
+        }
+        #sidebar a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        #sidebar a:hover {
+            background-color: #495057;
+        }
+        #content {
+            margin-left: 250px; 
+            padding: 20px;
+            background-color: #f8f9fa;
+            min-height: calc(100vh - 56px);
+            margin-top: 56px; /* Adjust content position to account for fixed navbar */
+        }
+        .navbar {
+            font-family: 'Roboto', sans-serif;
+        }
+        .icon-btn {
+            cursor: pointer;
+            color: #007bff;
+            margin-left: 10px;
+        }
+        .icon-btn:hover {
+            color: #0056b3;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Student Panel</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Settings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'dologout' %}">Log Out</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <div id="sidebar">
+        <h3>Student Dashboard</h3>
+        <a href="#"><i class="fas fa-home"></i> Overview</a>
+        <a href="#"><i class="fas fa-book"></i> Courses</a>
+        <a href="#"><i class="fas fa-user-graduate"></i> Students</a>
+        <a href="#"><i class="fas fa-sign-out-alt"></i> Log Out</a>
+    </div>
+
+    <!-- Content -->
+    <div id="content">
+        <div class="container mt-4">
+            <h1 class="mb-4">Welcome,</h1>
+            
+            <h2>Overview</h2>
+            <p>Here you can manage your courses.</p>
+            
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2>Your Courses</h2>
+                <a href="{% url 'addcourse' %}" class="btn btn-primary">Add New Course</a>
+            </div>
+
+            <!-- Course List -->
+            <div class="card mt-4">
+                <div class="card-body">
+                    {% if enrolled_courses %}
+                    <div class="row">
+                        {% for course in enrolled_courses %}
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ course.title }}</h5>
+                                        <p class="card-text">{{ course.description }}</p>
+                                        <p><strong>Teacher:</strong> {{ course.teacher.username }}</p>
+                                        <a href="{% url 'disenroll_course' course.id %}" class="btn btn-danger">Disenroll</a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>You are not enrolled in any courses.</p>
+                {% endif %}
+               
+       
+        
+                </div>
+
+                
+            </div>
+            <div>
+                <h1>Available Courses</h1>
+                {% if available_courses %}
+                    <div class="row">
+                        {% for course in available_courses %}
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ course.title }}</h5>
+                                        <p class="card-text">{{ course.description }}</p>
+                                        <p><strong>Teacher:</strong> {{ course.teacher.username }}</p>
+                                        <a href="{% url 'enroll_course' course.id %}" class="btn btn-primary">Enroll</a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>No available courses to enroll in.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

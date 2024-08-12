@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+{% load crispy_forms_tags %}
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://bootswatch.com/5/yeti/bootstrap.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+   
+    {% include "./navbar.html" %}
+    <div class="container" style="margin-top: 80px">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <form action="{% url 'signupfn' %}" method="POST" >
+                {% csrf_token %}
+
+                {{ form|crispy }}
+                <input type="submit" value="SignUp">
+                </form>
+                
+                {% for message in messages %}
+               
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <strong>{{ message }}</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+           
+                  {% endfor %}
+
+                  
+                
+         
+   
+            </div>
+        </div>
+    </div>
+</body>
+</html>
